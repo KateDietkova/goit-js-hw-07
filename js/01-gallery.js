@@ -11,6 +11,7 @@ galleryContainer.innerHTML = imgMarkup;
 // Add listener
 galleryContainer.addEventListener("click", onOpenModalImg);
 
+let instance;
 
 function onOpenModalImg(event) {
   event.preventDefault();
@@ -22,7 +23,7 @@ function onOpenModalImg(event) {
 
   const url = onGetOriginalUrl(currentImg);
 
-  const instance = basicLightbox.create(
+  instance = basicLightbox.create(
     `
         <img
         src="${url}"
@@ -35,21 +36,21 @@ function onOpenModalImg(event) {
   instance.show();
 
   galleryContainer.addEventListener("keydown", onCloseModalImg);
-
-  function onCloseModalImg(event) {
-    if (event.code !== "Escape") {
-      return;
-    }
-    
-    galleryContainer.removeEventListener("keydown", onCloseModalImg);
-      
-    instance.close();
-  }
 }
 
-// Get original url
+
 function onGetOriginalUrl(currentImg) {
   return currentImg.dataset.source;
+}
+
+function onCloseModalImg(event) {
+  if (event.code !== "Escape") {
+    return;
+  }
+
+  galleryContainer.removeEventListener("keydown", onCloseModalImg);
+
+  instance.close();
 }
 
 
