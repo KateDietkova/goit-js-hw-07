@@ -8,8 +8,8 @@ const galleryContainer = document.querySelector(".gallery");
 const imgMarkup = createGalleryMarkup(galleryItems);
 galleryContainer.innerHTML = imgMarkup;
 
+// Add listener
 galleryContainer.addEventListener("click", onOpenModalImg);
-
 
 
 function onOpenModalImg(event) {
@@ -22,8 +22,29 @@ function onOpenModalImg(event) {
 
   const url = onGetOriginalUrl(currentImg);
 
-  generateModalImg(url);
+  const instance = basicLightbox.create(
+    `
+        <img
+        src="${url}"
+        heigth = "800"
+        width = "600"
+        />
+    `
+  );
 
+  instance.show();
+
+  galleryContainer.addEventListener("keydown", onCloseModalImg);
+
+  function onCloseModalImg(event) {
+    if (event.code !== "Escape") {
+      return;
+    }
+    
+    galleryContainer.removeEventListener("keydown", onCloseModalImg);
+      
+    instance.close();
+  }
 }
 
 // Get original url
@@ -31,27 +52,6 @@ function onGetOriginalUrl(currentImg) {
   return currentImg.dataset.source;
 }
 
-function generateModalImg(imgUrl) {
-  const instance = basicLightbox.create(
-    `
-        <img
-        src="${imgUrl}"
-        heigth = "800"
-        width = "600"
-        />
-    `
-  );
-
-    instance.show();
-
-    galleryContainer.addEventListener("keydown", (event) => {
-        if (event.code !== "Escape") {
-          return;
-        }
-
-        instance.close();
-    });
-}
 
 
 function createGalleryMarkup(gallery) {
